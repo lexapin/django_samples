@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Пользовательские тесты{% endblock %}
+
+{% block main %}
+<div class="welcome">
+    <h1 class="title">Пользовательские тесты</h1>
+    <p class="subtitle">Тесты которые любишь</p>
+    <a class="btn btn-primary" href="{% url 'index' %}">новый тест</a>
+</div>
+
+<h2>Записи блога</h2>
+{% if test_groups %}
+<div>
+    {% for tg in test_groups %}
+    <div>
+        {{ tg.name }}
+        <br>
+        {{ tg.description }}
+        <br>
+        {% for testunit in tg.testunit_set.all %}
+        {{ testunit.name }}
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>Пока тестов нет</p>
+{% endif %}
+{% endblock %}
