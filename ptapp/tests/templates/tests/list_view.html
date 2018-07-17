@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if list_name %}
+<h2>{{ list_name }}</h2>
+{% endif %}
+
+{% if list_object %}
+<div class="row">
+    {% for obj, ref in list_object %}
+    <div class="col-sm-6" style="padding-bottom: 30px;">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ obj.name }}</h5>
+                <p class="card-text">{{ obj.description }}</p>
+                <a href="{{ ref }}" class="btn btn-primary">{{ button_text }}</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>Пока тестов нет</p>
+{% endif %}
+{% endblock %}
