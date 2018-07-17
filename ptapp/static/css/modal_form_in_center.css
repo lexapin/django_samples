@@ -1,1 +1,31 @@
-/home/aleksei/arloid/projects/robot4site/employees/desktop/libraries/css/modal_form_in_center.css
+/*!
+ *
+ * Изменение стиля отображения модальной формы
+ *
+ * Вместо отображения в центре сверху наверху
+ *
+ * Отображается в обсалютном центре экрана
+ *
+ * Спизженно в
+ *
+ *   https://codepen.io/dimbslmh/full/mKfCc
+ *
+ */
+.modal {
+  text-align: center;
+  padding: 0!important;
+}
+
+.modal:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px;
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
