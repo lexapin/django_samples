@@ -1,0 +1,26 @@
+<nav class="navbar navbar-default" role="navigation">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+    </button>
+    <a class="navbar-brand" href="{% url 'index' %}">Топовые тесты</a>
+  </div>
+
+
+  <!--Menu-->
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <p class="navbar-text navbar-right">
+          {% if user.is_authenticated %}
+              <a href="{% url 'index' %}"  class="navbar-link">{{ user }}</a>
+          {% else %}
+              <a href="{% url 'index' %}" class="navbar-link">Вход</a>
+          {% endif %}
+      </p>
+      <ul class="nav navbar-nav">
+        <li><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div>{% block title %}{% endblock %}</div>
