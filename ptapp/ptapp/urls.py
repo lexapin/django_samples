@@ -21,7 +21,12 @@ from django.conf.urls.static import static
 
 from django.urls import path
 
+from tests import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^$', views.test_groups, name='index'),
     url(r'^tests/', include('tests.urls')),
+    url(r'^nested_admin/', include('nested_admin.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
