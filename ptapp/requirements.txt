@@ -1,0 +1,5 @@
+Django==2.0.7
+django-nested-admin==3.0.21
+python-monkey-business==1.0.0
+pytz==2018.5
+six==1.11.0
