@@ -26,6 +26,6 @@ def group_tests(request, group_id):
     context = {
         'list_name': 'Тесты по теме \"%s\"'%tg.name,
         'button_text': 'Выполнить тест',
-        'list_object': ((obj, reverse('test:groups')) for obj in tg.testunit_set.all()),
+        'list_object': ((obj, reverse('interview:open', args=(obj.id,))) for obj in tg.testunit_set.all()),
     }
     return render(request, "tests/list_view.html", context)
