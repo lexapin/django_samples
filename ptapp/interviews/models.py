@@ -2,7 +2,9 @@ from django.db import models
 from django.conf import settings
 from tests.models import TestUnit, Question, Answer
 
+
 # Create your models here.
+
 
 class Interview(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -10,13 +12,26 @@ class Interview(models.Model):
     is_complete = models.BooleanField(default=False)
 
     def get_next_question(self):
-        question_number = self.reply_set.count()
-        return Reply(interview=self, question=self.testunit.question_set.all()[question_number])
+        reply = self.reply_set.last()
+        if reply is None:
+            reply = Reply(interview=self, question=self.testunit.question_set.first())
+            reply.save()
+            return reply
+        if reply.is_reply:
+            question_number = self.reply_set.count()
+            if question_number==self.testunit.question_set.count():
+                return None
+            else:
+                reply = Reply(interview=self, question=self.testunit.question_set.all()[question_number])
+                reply.save()
+                return reply
+        return reply
 
 
 class Reply(models.Model):
     interview = models.ForeignKey(Interview, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    is_reply = models.BooleanField(default=False)
 
 
 class UserAnswer(models.Model):
