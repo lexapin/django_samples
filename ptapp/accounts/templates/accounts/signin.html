@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Вход в систему</h2>
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}" />
+    {% include 'accounts/userform.html' %}
+    <button type="submit" class="btn btn-primary">Войти</button>
+</form>
+{% endblock %}
