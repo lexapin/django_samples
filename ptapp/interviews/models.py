@@ -33,6 +33,10 @@ class Reply(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     is_reply = models.BooleanField(default=False)
 
+    @property
+    def user_answers(self):
+        return sorted([u_answer. answer for u_answer in self.useranswer_set.all()], key=lambda answer: answer.id)
+
 
 class UserAnswer(models.Model):
     reply = models.ForeignKey(Reply, on_delete=models.CASCADE)

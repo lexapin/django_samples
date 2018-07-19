@@ -32,6 +32,10 @@ class Question(models.Model):
     def __str__(self):
         return self.text
 
+    @property
+    def right_answers(self):
+        return [answer for answer in self.answer_set.filter(right=True)]
+
 
 class Answer(models.Model):
     name = models.CharField(max_length=50)
