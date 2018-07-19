@@ -29,5 +29,6 @@ urlpatterns = [
     url(r'^tests/', include('tests.urls')),
     url(r'^interviews/', include('interviews.urls')),
     url(r'^nested_admin/', include('nested_admin.urls')),
+    url(r'^accounts/', include('accounts.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
