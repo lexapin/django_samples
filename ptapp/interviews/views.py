@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
 # Create your views here.
@@ -9,15 +10,7 @@ from .models import Interview, Reply, UserAnswer
 from tests.models import TestGroup, TestUnit, Question, Answer
 
 
-def get_user():
-  """
-  Пользователь по умолчанию пока нет аутентификации
-  :return:
-  TODO: Удалить когда появится авторизация
-  """
-  return User.objects.get(username='fomin')
-
-
+@login_required
 def open_interview(request, testunit_id):
     """
     Промежуточное представление:
@@ -29,9 +22,8 @@ def open_interview(request, testunit_id):
     :return:
     """
     testunit = TestUnit.objects.get(pk=testunit_id)
-    user = get_user()
-    # Как Вы относитесь к блокам try-except в своих релизах?
-    try:
+    user = request.user
+    try: # Как Вы относитесь к блокам try-except в своих релизах?
         interview = Interview.objects.get(
                                   user = user,
                                   testunit = testunit,
@@ -46,6 +38,7 @@ def open_interview(request, testunit_id):
         return HttpResponseRedirect(reverse('interview:question', args=(interview.id,)))
 
 
+@login_required
 def question(request, interview_id):
     """
     Выводит текукщий вопрос
@@ -54,7 +47,7 @@ def question(request, interview_id):
     :return:
     """
     try:
-        interview = Interview.objects.get(id = interview_id, user = get_user())
+        interview = Interview.objects.get(id = interview_id, user = request.user)
     except Interview.DoesNotExist:
         return HttpResponse('Вау!!!')
     question_for_reply = interview.get_next_question()
@@ -76,5 +69,26 @@ def question(request, interview_id):
     return render(request, "interviews/question.html", context)
 
 
+@login_required
 def report(request, interview_id):
-    return HttpResponse('Результаты тестов')
+    try:
+        interview = Interview.objects.get(id = interview_id, user = request.user)
+    except Interview.DoesNotExist:
+        return HttpResponse('Вау!!!')
+    count_right = 0
+    count_all = interview.reply_set.count()
+    detail = []
+    for index, reply in enumerate(interview.reply_set.all()):
+        if reply.question.right_answers==reply.user_answers:
+            count_right+=1
+            detail.append((index+1, True))
+        else:
+            detail.append((index+1, False))
+    context = {
+        'name': interview.testunit.name,
+        'count_all': count_all,
+        'count_right': count_right,
+        'right_percent': round(count_right/count_all*100),
+        'detail': detail,
+    }
+    return render(request, "interviews/report.html", context)
