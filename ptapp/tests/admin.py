@@ -37,12 +37,6 @@ class QuestionForm(forms.ModelForm):
         model = Question
         fields = "__all__"
 
-    def clean(self):
-        print(self.cleaned_data)
-        if False:
-            raise forms.ValidationError('Error')
-        return self.cleaned_data
-
 
 class QuestionAdmin(nested_admin.NestedModelAdmin):
     form = QuestionForm
