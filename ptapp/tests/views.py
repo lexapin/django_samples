@@ -1,31 +1,40 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 
 # Create your views here.
 
-from django.contrib.auth.models import User
-from .models import TestGroup, TestUnit, Question, Answer
-
-def get_user():
-    return User.objects.get(username='fomin')
+from .models import TestGroup, TestUnit
+from django.views.generic.list import ListView
 
 
-def test_groups(request):
-    context = {
-        'list_name': 'Наборы тестов',
-        'button_text': 'Перейти к тестам',
-        'list_object': ((obj, reverse('test:group', args=(obj.id,))) for obj in TestGroup.objects.all()),
-    }
+class TestGroupListView(ListView):
+    model = TestGroup
+    template_name="tests/list_view.html"
 
-    return render(request, "tests/list_view.html", context)
+    def get_context_data(self, **kwargs):
+        context = super(TestGroupListView, self).get_context_data(**kwargs)
+        context.update({
+            'list_name': 'Наборы тестов',
+            'button_text': 'Перейти к тестам',
+        })
+        context['object_list'] = ((obj, reverse('test:group', args=(obj.id,))) for obj in context['object_list'])
+        return context
 
 
-def group_tests(request, group_id):
-    tg = TestGroup.objects.get(id=group_id)
-    context = {
-        'list_name': 'Тесты по теме \"%s\"'%tg.name,
-        'button_text': 'Выполнить тест',
-        'list_object': ((obj, reverse('interview:open', args=(obj.id,))) for obj in tg.testunit_set.all()),
-    }
-    return render(request, "tests/list_view.html", context)
+class TestUnitListView(ListView):
+    model = TestUnit
+    template_name = "tests/list_view.html"
+
+    def get_queryset(self):
+        self.test_group = get_object_or_404(TestGroup, id=self.kwargs['group_id'])
+        qs = super(TestUnitListView, self).get_queryset()
+        return qs.filter(test_group = self.test_group)
+    
+    def get_context_data(self, **kwargs):
+        context = super(TestUnitListView, self).get_context_data(**kwargs)
+        context.update({
+            'list_name': 'Тесты по теме \"%s\"' % self.test_group.name,
+            'button_text': 'Выполнить тест',
+        })
+        context['object_list'] = ((obj, reverse('interview:open', args=(obj.id,))) for obj in context['object_list'])
+        return context

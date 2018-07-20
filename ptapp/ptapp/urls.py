@@ -25,7 +25,7 @@ from tests import views as views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^$', views.test_groups, name='index'),
+    url(r'^$', views.TestGroupListView.as_view(), name='index'),
     url(r'^tests/', include('tests.urls')),
     url(r'^interviews/', include('interviews.urls')),
     url(r'^nested_admin/', include('nested_admin.urls')),
