@@ -12,6 +12,7 @@ class AnswerFormset(forms.models.BaseInlineFormSet):
         for form in self.forms:
             data = form.cleaned_data
             if not data: continue
+            if data['DELETE']: continue
             question_count+=1
             if data.get('right'):
                 right_count+=1
