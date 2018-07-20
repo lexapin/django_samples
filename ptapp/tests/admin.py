@@ -16,7 +16,6 @@ class AnswerFormset(forms.models.BaseInlineFormSet):
             question_count+=1
             if data.get('right'):
                 right_count+=1
-        print(question_count, right_count)
         if question_count==0 and right_count==0:
             return
         if question_count < 2:
