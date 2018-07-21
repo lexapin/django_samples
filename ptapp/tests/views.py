@@ -29,7 +29,7 @@ class TestGroupListView(ListView):
             'list_name': 'Наборы тестов',
             'button_text': 'Перейти к тестам',
         })
-        context['object_list'] = ((obj, reverse('test:group', args=(obj.id,))) for obj in context['object_list'])
+        context['object_list'] = [(obj, reverse('test:group', args=(obj.id,))) for obj in context['object_list']]
         return context
 
 
@@ -55,5 +55,5 @@ class TestUnitListView(ListView):
             'list_name': 'Набор тестов по теме \"%s\"' % self.test_group.name,
             'button_text': 'Выполнить тест',
         })
-        context['object_list'] = ((obj, reverse('interview:open', args=(obj.id,))) for obj in context['object_list'])
+        context['object_list'] = [(obj, reverse('interview:open', args=(obj.id,))) for obj in context['object_list']]
         return context
