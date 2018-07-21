@@ -1,9 +1,16 @@
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-# Create your views here.
+
+# Представления для приложения accounts.
+# - signup - Регистрация пользователя
+# - login - Вход для пользователя (стандартное представление DJANGO)
+# - logout - Выход для пользователя (стандартное представление DJANGO)
 
 def signup(request):
+    """
+    Для формирования представления используется стандартная форма DJANGO UserCreationForm
+    """
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
