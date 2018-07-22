@@ -35,7 +35,7 @@ class AnswerFormset(forms.models.BaseInlineFormSet):
             if data.get('right'):
                 right_count+=1
         if question_count==0 and right_count==0:
-            return
+            raise forms.ValidationError('Вопрос должен содержать ответы.')
         if question_count < 2:
             raise forms.ValidationError('Число вариантов ответов должно быть больше одного.')
         if right_count==0:
@@ -50,7 +50,7 @@ class AnswerInline(nested_admin.NestedTabularInline):
     """
     model = Answer
     formset = AnswerFormset
-    extra = 4
+    extra = 0
 
 
 class QuestionForm(forms.ModelForm):
@@ -76,7 +76,7 @@ class QuestionInline(nested_admin.NestedStackedInline):
     """
     model = Question
     inlines = [AnswerInline]
-    extra = 4
+    extra = 0
 
 
 class TestUnitAdmin(nested_admin.NestedModelAdmin):
