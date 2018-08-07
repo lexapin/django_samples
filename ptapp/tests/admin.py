@@ -26,21 +26,19 @@ class AnswerFormset(forms.models.BaseInlineFormSet):
         - нет правильных ответов
         - все варианты ответов верные
         """
-        question_count = 0
-        right_count = 0
-        for form in self.forms:
-            data = form.cleaned_data
-            if not data or data.get('DELETE'): continue
-            question_count+=1
-            if data.get('right'):
-                right_count+=1
-        if question_count==0 and right_count==0:
+
+        binary_question_answers = list(map(
+            lambda data: False if not data or not data.get('right') else True,
+            [form.cleaned_data for form in self.forms if not form.cleaned_data.get('DELETE')],
+        ))
+
+        if not binary_question_answers:
             raise forms.ValidationError('Вопрос должен содержать ответы.')
-        if question_count < 2:
+        if len(binary_question_answers) < 2:
             raise forms.ValidationError('Число вариантов ответов должно быть больше одного.')
-        if right_count==0:
+        if not any(binary_question_answers):
             raise forms.ValidationError('У вопроса должен быть хотя бы один правильный ответ.')
-        if right_count==question_count:
+        if all(binary_question_answers):
             raise forms.ValidationError('У вопроса теста не могут все ответы быть верными.')
 
 
